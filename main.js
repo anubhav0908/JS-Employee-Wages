@@ -1,69 +1,29 @@
-// Constants
-const WAGE_PER_HOUR = 20;
-const FULL_TIME_HOURS = 8;
-const PART_TIME_HOURS = 4;
-const IS_PART_TIME = 1;
-const IS_FULL_TIME = 2;
-const MAX_WORKING_HOURS = 160;
-const MAX_WORKING_DAYS = 20;
+// ExtendedEmployeePayroll.js
+const EmployeePayrollData = require('./EmployeePayroll');
 
-// Function to get working hours
-const getWorkingHours = (empCheck) => {
-    switch (empCheck) {
-        case IS_PART_TIME:
-            return PART_TIME_HOURS;
-        case IS_FULL_TIME:
-            return FULL_TIME_HOURS;
-        default:
-            return 0;
+class ExtendedEmployeePayrollData extends EmployeePayrollData {
+    // New properties
+    gender;
+    startDate;
+
+    // Constructor (Extends EmployeePayrollData)
+    constructor(id, name, salary, gender, startDate) {
+        super(id, name, salary); // Call parent class constructor
+        this.gender = gender;
+        this.startDate = startDate;
     }
-};
 
-// Function to calculate daily wage
-const calculateDailyWage = (empHrs) => empHrs * WAGE_PER_HOUR;
-
-// Array to store employee records
-let empDailyRecords = [];
-
-let totalEmpHrs = 0;
-let totalWorkingDays = 0;
-
-// Loop until max working hours (160) or max working days (20) is reached
-while (totalEmpHrs < MAX_WORKING_HOURS && totalWorkingDays < MAX_WORKING_DAYS) {
-    totalWorkingDays++;
-    let empCheck = Math.floor(Math.random() * 3); // Generate random value 0, 1, or 2
-    let empHrs = getWorkingHours(empCheck);
-    
-    totalEmpHrs += empHrs;
-    let dailyWage = calculateDailyWage(empHrs);
-    
-    // Store the data as an object in an array
-    empDailyRecords.push({
-        day: totalWorkingDays,
-        hoursWorked: empHrs,
-        wageEarned: dailyWage
-    });
+    // Override toString method
+    toString() {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const empDate = this.startDate ? this.startDate.toLocaleDateString("en-US", options) : "undefined";
+        return super.toString() + `, gender=${this.gender}, startDate=${empDate}`;
+    }
 }
 
-// ✅ a. Calculate total Wage and total Hours worked using reduce
-let totalWage = empDailyRecords.reduce((total, record) => total + record.wageEarned, 0);
-let totalHours = empDailyRecords.reduce((total, record) => total + record.hoursWorked, 0);
-console.log(`Total Hours: ${totalHours}, Total Wage: ${totalWage}`);
+// Testing the extended class
+let employee1 = new ExtendedEmployeePayrollData(1, "Om Prakash", 30000, "M", new Date("2023-01-15"));
+console.log(employee1.toString());
 
-// ✅ b. Show Full Working Days using forEach
-console.log("Full Working Days:");
-empDailyRecords.forEach(record => {
-    if (record.hoursWorked === FULL_TIME_HOURS) console.log(`Day ${record.day}: ${record.hoursWorked} hrs`);
-});
-
-// ✅ c. Show Part Working Days using map and reduce to String Array
-let partTimeDays = empDailyRecords
-    .filter(record => record.hoursWorked === PART_TIME_HOURS)
-    .map(record => `Day ${record.day}`);
-console.log("Part Working Days: " + partTimeDays.join(", "));
-
-// ✅ d. Show No Working Days using map function
-let noWorkDays = empDailyRecords
-    .filter(record => record.hoursWorked === 0)
-    .map(record => `Day ${record.day}`);
-console.log("No Working Days: " + noWorkDays.join(", "));
+let employee2 = new ExtendedEmployeePayrollData(2, "Deepika", 40000, "F", new Date());
+console.log(employee2.toString());
