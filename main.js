@@ -7,7 +7,7 @@ const IS_FULL_TIME = 2;
 const MAX_WORKING_HOURS = 160;
 const MAX_WORKING_DAYS = 20;
 
-// Function to get working hours based on employee type
+// Function to get working hours
 const getWorkingHours = (empCheck) => {
     switch (empCheck) {
         case IS_PART_TIME:
@@ -45,5 +45,25 @@ while (totalEmpHrs < MAX_WORKING_HOURS && totalWorkingDays < MAX_WORKING_DAYS) {
     });
 }
 
-// ✅ Display the stored records
-console.log("Employee Daily Records:", empDailyRecords);
+// ✅ a. Calculate total Wage and total Hours worked using reduce
+let totalWage = empDailyRecords.reduce((total, record) => total + record.wageEarned, 0);
+let totalHours = empDailyRecords.reduce((total, record) => total + record.hoursWorked, 0);
+console.log(`Total Hours: ${totalHours}, Total Wage: ${totalWage}`);
+
+// ✅ b. Show Full Working Days using forEach
+console.log("Full Working Days:");
+empDailyRecords.forEach(record => {
+    if (record.hoursWorked === FULL_TIME_HOURS) console.log(`Day ${record.day}: ${record.hoursWorked} hrs`);
+});
+
+// ✅ c. Show Part Working Days using map and reduce to String Array
+let partTimeDays = empDailyRecords
+    .filter(record => record.hoursWorked === PART_TIME_HOURS)
+    .map(record => `Day ${record.day}`);
+console.log("Part Working Days: " + partTimeDays.join(", "));
+
+// ✅ d. Show No Working Days using map function
+let noWorkDays = empDailyRecords
+    .filter(record => record.hoursWorked === 0)
+    .map(record => `Day ${record.day}`);
+console.log("No Working Days: " + noWorkDays.join(", "));
