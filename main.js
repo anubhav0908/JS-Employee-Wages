@@ -6,6 +6,7 @@ const IS_PART_TIME = 1;
 const IS_FULL_TIME = 2;
 const MAX_WORKING_HOURS = 160;
 const MAX_WORKING_DAYS = 20;
+const FULL_TIME_WAGE = FULL_TIME_HOURS * WAGE_PER_HOUR;
 
 // Function to get working hours based on employee type
 function getWorkingHours(empCheck) {
@@ -28,6 +29,7 @@ function calculateDailyWage(empHrs) {
 let totalEmpHrs = 0;
 let totalWorkingDays = 0;
 let dailyWagesArray = []; // Array to store daily wages
+let dailyWageMap = new Map(); // Map to store day-wise wage
 
 // Loop until max working hours (160) or max working days (20) is reached
 while (totalEmpHrs < MAX_WORKING_HOURS && totalWorkingDays < MAX_WORKING_DAYS) {
@@ -40,13 +42,35 @@ while (totalEmpHrs < MAX_WORKING_HOURS && totalWorkingDays < MAX_WORKING_DAYS) {
     
     // Store daily wage in the array
     dailyWagesArray.push(dailyWage);
+
+    // Store in Map with day number
+    dailyWageMap.set(totalWorkingDays, dailyWage);
 }
 
-// Calculate total wage
-let totalEmpWage = totalEmpHrs * WAGE_PER_HOUR;
+// ✅ (a) Calculate Total Wage using reduce()
+let totalEmpWage = dailyWagesArray.reduce((total, wage) => total + wage, 0);
+console.log("Total Employee Wage: $" + totalEmpWage);
 
-// Output total days worked, total hours, and wage
-console.log("Total Days: " + totalWorkingDays + " | Total Hours: " + totalEmpHrs + " | Total Emp Wage: $" + totalEmpWage);
+// ✅ (b) Show Day along with Daily Wage using map()
+let dayWithWages = dailyWagesArray.map((wage, index) => `Day ${index + 1}: $${wage}`);
+console.log("Day-wise Wages: \n", dayWithWages.join("\n"));
 
-// Display Daily Wages
-console.log("Daily Wages: ", dailyWagesArray);
+// ✅ (c) Show Days when Full Time Wage (160) was earned using filter()
+let fullTimeWageDays = [...dailyWageMap.entries()].filter(([day, wage]) => wage === FULL_TIME_WAGE).map(([day]) => `Day ${day}`);
+console.log("Days with Full Time Wage (160$): ", fullTimeWageDays.join(", "));
+
+// ✅ (d) Find the first occurrence of Full Time Wage using find()
+let firstFullTimeWageDay = [...dailyWageMap.entries()].find(([day, wage]) => wage === FULL_TIME_WAGE);
+console.log("First occurrence of Full Time Wage: ", firstFullTimeWageDay ? `Day ${firstFullTimeWageDay[0]}` : "Not found");
+
+// ✅ (e) Check if Every Element of Full Time Wage is truly holding Full Time Wage using every()
+let allFullTime = dailyWagesArray.every(wage => wage === FULL_TIME_WAGE);
+console.log("Every element holds Full Time Wage (160$): ", allFullTime);
+
+// ✅ (f) Check if there is any Part Time Wage using some()
+let hasPartTimeWage = dailyWagesArray.some(wage => wage === PART_TIME_HOURS * WAGE_PER_HOUR);
+console.log("Is there any Part Time Wage (80$): ", hasPartTimeWage);
+
+// ✅ (g) Find the number of days the Employee Worked (non-zero wage) using filter()
+let totalDaysWorked = dailyWagesArray.filter(wage => wage > 0).length;
+console.log("Total Days Employee Worked: ", totalDaysWorked);
