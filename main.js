@@ -4,7 +4,8 @@ const FULL_TIME_HOURS = 8;
 const PART_TIME_HOURS = 4;
 const IS_PART_TIME = 1;
 const IS_FULL_TIME = 2;
-const NUM_OF_WORKING_DAYS = 20; // Assuming 20 working days
+const MAX_WORKING_HOURS = 160;
+const MAX_WORKING_DAYS = 20;
 
 // Function to get working hours based on employee type
 function getWorkingHours(empCheck) {
@@ -19,16 +20,18 @@ function getWorkingHours(empCheck) {
 }
 
 // Variables
-let empHrs = 0;
+let totalEmpHrs = 0;
+let totalWorkingDays = 0;
 
-// Loop through each working day
-for (let day = 0; day < NUM_OF_WORKING_DAYS; day++) {
+// Loop until max working hours (160) or max working days (20) is reached
+while (totalEmpHrs < MAX_WORKING_HOURS && totalWorkingDays < MAX_WORKING_DAYS) {
+    totalWorkingDays++;
     let empCheck = Math.floor(Math.random() * 3); // Generate random value 0, 1, or 2
-    empHrs += getWorkingHours(empCheck);
+    totalEmpHrs += getWorkingHours(empCheck);
 }
 
-// Calculate monthly wage
-let empWage = empHrs * WAGE_PER_HOUR;
+// Calculate total wage
+let empWage = totalEmpHrs * WAGE_PER_HOUR;
 
-// Output total hours and wage
-console.log("Total Hrs: " + empHrs + " | Emp Wage: $" + empWage);
+// Output total days worked, total hours, and wage
+console.log("Total Days: " + totalWorkingDays + " | Total Hours: " + totalEmpHrs + " | Emp Wage: $" + empWage);
