@@ -19,19 +19,34 @@ function getWorkingHours(empCheck) {
     }
 }
 
+// Function to calculate daily wage
+function calculateDailyWage(empHrs) {
+    return empHrs * WAGE_PER_HOUR;
+}
+
 // Variables
 let totalEmpHrs = 0;
 let totalWorkingDays = 0;
+let dailyWagesArray = []; // Array to store daily wages
 
 // Loop until max working hours (160) or max working days (20) is reached
 while (totalEmpHrs < MAX_WORKING_HOURS && totalWorkingDays < MAX_WORKING_DAYS) {
     totalWorkingDays++;
     let empCheck = Math.floor(Math.random() * 3); // Generate random value 0, 1, or 2
-    totalEmpHrs += getWorkingHours(empCheck);
+    let empHrs = getWorkingHours(empCheck);
+    
+    totalEmpHrs += empHrs;
+    let dailyWage = calculateDailyWage(empHrs);
+    
+    // Store daily wage in the array
+    dailyWagesArray.push(dailyWage);
 }
 
 // Calculate total wage
-let empWage = totalEmpHrs * WAGE_PER_HOUR;
+let totalEmpWage = totalEmpHrs * WAGE_PER_HOUR;
 
 // Output total days worked, total hours, and wage
-console.log("Total Days: " + totalWorkingDays + " | Total Hours: " + totalEmpHrs + " | Emp Wage: $" + empWage);
+console.log("Total Days: " + totalWorkingDays + " | Total Hours: " + totalEmpHrs + " | Total Emp Wage: $" + totalEmpWage);
+
+// Display Daily Wages
+console.log("Daily Wages: ", dailyWagesArray);
